@@ -43,7 +43,7 @@ class TableauReport extends React.Component {
 
     // Only report is changed - re-initialize
     if (isReportChanged) {
-      this.initTableau();
+      this.initTableau(nextProps.url);
     }
 
     // Only filters are changed, apply via the API
@@ -151,7 +151,10 @@ class TableauReport extends React.Component {
    * Initialize the viz via the Tableau JS API.
    * @return {void}
    */
-  initTableau() {
+  initTableau(url) {
+    if(url){
+      console.log("urls: ", url,this.props.url);
+    }
     const { filters, parameters } = this.props;
     const vizUrl = this.getUrl();
 
