@@ -1,10 +1,11 @@
 {
   "name": "tableau-react",
-  "version": "1.0.2",
-  "description":
-    "React component for rendering tableau reports using tableau javascript API.",
+  "version": "1.0.3",
+  "description": "React component for rendering tableau reports using tableau javascript API.",
   "main": "dist/index.js",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "test": "mocha test/.setup.js test/**/*-test.js",
     "build": "rimraf dist/ && babel src/ --out-dir dist",
@@ -14,7 +15,11 @@
     "type": "git",
     "url": "git+https://github.com/coopermaruyama/tableau-react.git"
   },
-  "keywords": ["tableau", "react", "jsx"],
+  "keywords": [
+    "tableau",
+    "react",
+    "jsx"
+  ],
   "author": "Cooper Maruyama",
   "license": "MIT",
   "bugs": {

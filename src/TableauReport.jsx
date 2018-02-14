@@ -32,7 +32,7 @@ class TableauReport extends React.Component {
   }
 
   componentDidMount() {
-    this.initTableau();
+    this.initTableau(this.props.url);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -88,14 +88,14 @@ class TableauReport extends React.Component {
    * Returns a vizUrl, tokenizing it if a token is passed and immediately
    * invalidating it to prevent it from being used more than once.
    */
-  getUrl() {
+  getUrl(_url) {
     const { token } = this.props;
-    const parsed = url.parse(this.props.url, true);
+    const parsed = url.parse(_url, true);
     const query = '?:embed=yes&:comments=no&:toolbar=yes&:refresh=yes';
 
     if (!this.state.didInvalidateToken && token) {
       this.invalidateToken();
-      return tokenizeUrl(this.props.url, token) + query;
+      return tokenizeUrl(_url, token) + query;
     }
 
     return parsed.protocol + '//' + parsed.host + parsed.pathname + query;
@@ -151,12 +151,10 @@ class TableauReport extends React.Component {
    * Initialize the viz via the Tableau JS API.
    * @return {void}
    */
-  initTableau(url) {
-    if(url){
-      console.log("urls: ", url,this.props.url);
-    }
+  initTableau(_url) {
+
     const { filters, parameters } = this.props;
-    const vizUrl = this.getUrl();
+    const vizUrl = this.getUrl(_url);
 
     const options = {
       ...filters,

@@ -16,9 +16,9 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _url = require('url');
+var _url2 = require('url');
 
-var _url2 = _interopRequireDefault(_url);
+var _url3 = _interopRequireDefault(_url2);
 
 var _es6Promise = require('es6-promise');
 
@@ -75,7 +75,7 @@ var TableauReport = function (_React$Component) {
   _createClass(TableauReport, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this.initTableau();
+      this.initTableau(this.props.url);
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -87,7 +87,7 @@ var TableauReport = function (_React$Component) {
 
       // Only report is changed - re-initialize
       if (isReportChanged) {
-        this.initTableau();
+        this.initTableau(nextProps.url);
       }
 
       // Only filters are changed, apply via the API
@@ -145,15 +145,15 @@ var TableauReport = function (_React$Component) {
 
   }, {
     key: 'getUrl',
-    value: function getUrl() {
+    value: function getUrl(_url) {
       var token = this.props.token;
 
-      var parsed = _url2.default.parse(this.props.url, true);
+      var parsed = _url3.default.parse(_url, true);
       var query = '?:embed=yes&:comments=no&:toolbar=yes&:refresh=yes';
 
       if (!this.state.didInvalidateToken && token) {
         this.invalidateToken();
-        return (0, _tokenizeUrl2.default)(this.props.url, token) + query;
+        return (0, _tokenizeUrl2.default)(_url, token) + query;
       }
 
       return parsed.protocol + '//' + parsed.host + parsed.pathname + query;
@@ -217,14 +217,14 @@ var TableauReport = function (_React$Component) {
 
   }, {
     key: 'initTableau',
-    value: function initTableau() {
+    value: function initTableau(_url) {
       var _this4 = this;
 
       var _props = this.props,
           filters = _props.filters,
           parameters = _props.parameters;
 
-      var vizUrl = this.getUrl();
+      var vizUrl = this.getUrl(_url);
 
       var options = _extends({}, filters, parameters, this.props.options, {
         onFirstInteractive: function onFirstInteractive() {
