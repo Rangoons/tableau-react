@@ -11,14 +11,14 @@ const propTypes = {
   url: PropTypes.string,
   parameters: PropTypes.object,
   options: PropTypes.object,
-  token: PropTypes.string
+  token: PropTypes.string,
 };
 
 const defaultProps = {
   loading: false,
   parameters: {},
   filters: {},
-  options: {}
+  options: {},
 };
 
 class TableauReport extends React.Component {
@@ -27,7 +27,7 @@ class TableauReport extends React.Component {
 
     this.state = {
       filters: props.filters,
-      parameters: props.parameters
+      parameters: props.parameters,
     };
   }
 
@@ -37,8 +37,15 @@ class TableauReport extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const isReportChanged = nextProps.url !== this.props.url;
-    const isFiltersChanged = !shallowequal(this.props.filters, nextProps.filters, this.compareArrays);
-    const isParametersChanged = !shallowequal(this.props.parameters, nextProps.parameters);
+    const isFiltersChanged = !shallowequal(
+      this.props.filters,
+      nextProps.filters,
+      this.compareArrays
+    );
+    const isParametersChanged = !shallowequal(
+      this.props.parameters,
+      nextProps.parameters
+    );
     const isLoading = this.state.loading;
 
     // Only report is changed - re-initialize
@@ -81,7 +88,7 @@ class TableauReport extends React.Component {
    * whether any throw an error.
    */
   onComplete(promises, cb) {
-    Promise.all(promises).then(() => cb(), () => cb())
+    Promise.all(promises).then(() => cb(), () => cb());
   }
 
   /**
@@ -122,9 +129,7 @@ class TableauReport extends React.Component {
         !this.state.filters.hasOwnProperty(key) ||
         !this.compareArrays(this.state.filters[key], filters[key])
       ) {
-        promises.push(
-          this.sheet.applyFilterAsync(key, filters[key], REPLACE)
-        );
+        promises.push(this.sheet.applyFilterAsync(key, filters[key], REPLACE));
       }
     }
 
@@ -144,7 +149,9 @@ class TableauReport extends React.Component {
       }
     }
 
-    this.onComplete(promises, () => this.setState({ loading: false, parameters }));
+    this.onComplete(promises, () =>
+      this.setState({ loading: false, parameters })
+    );
   }
 
   /**
@@ -152,7 +159,6 @@ class TableauReport extends React.Component {
    * @return {void}
    */
   initTableau(_url) {
-
     const { filters, parameters } = this.props;
     const vizUrl = this.getUrl(_url);
 
@@ -164,9 +170,10 @@ class TableauReport extends React.Component {
         this.workbook = this.viz.getWorkbook();
         this.sheets = this.workbook.getActiveSheet().getWorksheets();
         this.sheet = this.sheets[0];
+        console.log(this.workbook.getPublishedSheetsInfo());
 
         this.props.onLoad(new Date());
-      }
+      },
     };
 
     // cleanup
@@ -179,7 +186,7 @@ class TableauReport extends React.Component {
   }
 
   render() {
-    return <div ref={c => this.container = c} />;
+    return <div ref={c => (this.container = c)} />;
   }
 }
 
