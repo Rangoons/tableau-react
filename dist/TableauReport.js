@@ -231,6 +231,7 @@ var TableauReport = function (_React$Component) {
           _this4.workbook = _this4.viz.getWorkbook();
           _this4.sheets = _this4.workbook.getActiveSheet().getWorksheets();
           _this4.sheet = _this4.sheets[0];
+          console.log(_this4.workbook.getPublishedSheetsInfo());
 
           _this4.props.onLoad(new Date());
         }
