@@ -212,7 +212,7 @@ var TableauReport = function (_React$Component) {
   }, {
     key: 'onTabSwitch',
     value: function onTabSwitch(viz) {
-      return viz.getWorkbook().getActiveSheet.getUrl();
+      return this.props.getSheetUrl(viz.getWorkbook().getActiveSheet.getUrl());
     }
 
     /**
