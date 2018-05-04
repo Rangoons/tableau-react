@@ -209,6 +209,11 @@ var TableauReport = function (_React$Component) {
         return _this3.setState({ loading: false, parameters: parameters });
       });
     }
+  }, {
+    key: 'onTabSwitch',
+    value: function onTabSwitch(viz) {
+      return viz.getWorkbook().getActiveSheet.getUrl();
+    }
 
     /**
      * Initialize the viz via the Tableau JS API.
@@ -231,8 +236,9 @@ var TableauReport = function (_React$Component) {
           _this4.workbook = _this4.viz.getWorkbook();
           _this4.sheets = _this4.workbook.getActiveSheet().getWorksheets();
           _this4.sheet = _this4.sheets[0];
-          console.log(_this4.workbook.getPublishedSheetsInfo());
-
+          _this4.viz.addEventListener(_tableauApi2.default.TableauEventName.TAB_SWITCH, function () {
+            return _this4.onTabSwitch(_this4.viz);
+          });
           _this4.props.onLoad(new Date());
         }
       });

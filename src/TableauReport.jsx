@@ -154,6 +154,10 @@ class TableauReport extends React.Component {
     );
   }
 
+  onTabSwitch(viz) {
+    return viz.getWorkbook().getActiveSheet.getUrl();
+  }
+
   /**
    * Initialize the viz via the Tableau JS API.
    * @return {void}
@@ -170,8 +174,9 @@ class TableauReport extends React.Component {
         this.workbook = this.viz.getWorkbook();
         this.sheets = this.workbook.getActiveSheet().getWorksheets();
         this.sheet = this.sheets[0];
-        console.log(this.workbook.getPublishedSheetsInfo());
-
+        this.viz.addEventListener(Tableau.TableauEventName.TAB_SWITCH, () =>
+          this.onTabSwitch(this.viz)
+        );
         this.props.onLoad(new Date());
       },
     };
