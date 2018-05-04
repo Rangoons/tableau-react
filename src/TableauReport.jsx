@@ -155,7 +155,7 @@ class TableauReport extends React.Component {
   }
 
   onTabSwitch(viz) {
-    return viz.getWorkbook().getActiveSheet.getUrl();
+    return this.props.getSheetUrl(viz.getWorkbook().getActiveSheet.getUrl());
   }
 
   /**
