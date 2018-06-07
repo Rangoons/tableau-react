@@ -28,6 +28,7 @@ class TableauReport extends React.Component {
     this.state = {
       filters: props.filters,
       parameters: props.parameters,
+      viz: {},
     };
   }
 
@@ -37,6 +38,10 @@ class TableauReport extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const isReportChanged = nextProps.url !== this.props.url;
+    const isResized = nextProps.options.width !== this.props.options.width;
+    if (isResized) {
+      this.resizeViz(nextProps.options.width, nextProps.options.height);
+    }
     const isFiltersChanged = !shallowequal(
       this.props.filters,
       nextProps.filters,
@@ -98,7 +103,8 @@ class TableauReport extends React.Component {
   getUrl(_url) {
     const { token } = this.props;
     const parsed = url.parse(_url, true);
-    const query = '?:embed=yes&:comments=no&:toolbar=yes&:refresh=yes';
+    // const query = '?:embed=yes&:comments=no&:toolbar=yes&:refresh=yes';
+    const query = '';
 
     if (!this.state.didInvalidateToken && token) {
       this.invalidateToken();
@@ -162,6 +168,48 @@ class TableauReport extends React.Component {
         .getUrl()
     );
   }
+  resizeViz = (width, height) => {
+    var sheet = this.state.viz.getWorkbook().getActiveSheet();
+    if (sheet) {
+      if (
+        sheet.getSheetType() === 'dashboard' ||
+        sheet.getSheetType() === 'story'
+      ) {
+        sheet
+          .changeSizeAsync({
+            behavior: 'EXACTLY',
+            maxSize: {
+              height: height,
+              width: width,
+            },
+          })
+          .then(
+            this.state.viz.setFrameSize(
+              parseInt(width, 10),
+              parseInt(height, 10)
+            )
+          );
+      }
+      if (sheet.getSheetType() === 'worksheet') {
+        sheet
+          .changeSizeAsync({
+            behavior: 'AUTOMATIC',
+            maxSize: {
+              height: height,
+              width: width,
+            },
+          })
+          .then(
+            this.state.viz.setFrameSize(
+              parseInt(width, 10),
+              parseInt(height, 10)
+            )
+          );
+      }
+    } else {
+      this.state.viz.setFrameSize(parseInt(width, 10), parseInt(height, 10));
+    }
+  };
 
   /**
    * Initialize the viz via the Tableau JS API.
@@ -176,20 +224,20 @@ class TableauReport extends React.Component {
       ...parameters,
       ...this.props.options,
       onFirstInteractive: () => {
-        this.workbook = this.viz.getWorkbook();
-        this.sheets = this.workbook.getActiveSheet().getWorksheets();
-        this.sheet = this.sheets[0];
+        // this.workbook = this.viz.getWorkbook();
+        // this.sheets = this.workbook.getActiveSheet().getWorksheets();
+        // this.sheet = this.sheets[0];
         this.viz.addEventListener(Tableau.TableauEventName.TAB_SWITCH, () =>
           this.onTabSwitch(this.viz)
         );
-        this.props.onLoad(new Date());
+        this.setState({ viz: this.viz });
       },
     };
 
     // cleanup
     if (this.viz) {
       this.viz.dispose();
-      this.viz = null;
+      this.setState({ viz: null });
     }
 
     this.viz = new Tableau.Viz(this.container, vizUrl, options);
