@@ -26,7 +26,7 @@ var _shallowequal = require('shallowequal');
 
 var _shallowequal2 = _interopRequireDefault(_shallowequal);
 
-var _tokenizeUrl = require('components/tableau/tokenizeUrl');
+var _tokenizeUrl = require('./tokenizeUrl');
 
 var _tokenizeUrl2 = _interopRequireDefault(_tokenizeUrl);
 

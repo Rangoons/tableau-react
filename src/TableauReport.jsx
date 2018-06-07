@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import { Promise } from 'es6-promise';
 import shallowequal from 'shallowequal';
-import tokenizeUrl from 'components/tableau/tokenizeUrl';
+import tokenizeUrl from './tokenizeUrl';
 import Tableau from 'tableau-api';
 
 const propTypes = {
