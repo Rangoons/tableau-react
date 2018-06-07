@@ -67,7 +67,8 @@ var TableauReport = function (_React$Component) {
 
     _this.state = {
       filters: props.filters,
-      parameters: props.parameters
+      parameters: props.parameters,
+      viz: {}
     };
     return _this;
   }
@@ -81,6 +82,10 @@ var TableauReport = function (_React$Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       var isReportChanged = nextProps.url !== this.props.url;
+      var isResized = nextProps.options.width !== this.props.options.width;
+      if (isResized) {
+        this.resizeViz(nextProps.options.width, nextProps.options.height);
+      }
       var isFiltersChanged = !(0, _shallowequal2.default)(this.props.filters, nextProps.filters, this.compareArrays);
       var isParametersChanged = !(0, _shallowequal2.default)(this.props.parameters, nextProps.parameters);
       var isLoading = this.state.loading;
@@ -149,7 +154,8 @@ var TableauReport = function (_React$Component) {
       var token = this.props.token;
 
       var parsed = _url3.default.parse(_url, true);
-      var query = '?:embed=yes&:comments=no&:toolbar=yes&:refresh=yes';
+      // const query = '?:embed=yes&:comments=no&:toolbar=yes&:refresh=yes';
+      var query = '';
 
       if (!this.state.didInvalidateToken && token) {
         this.invalidateToken();
@@ -214,6 +220,33 @@ var TableauReport = function (_React$Component) {
     value: function onTabSwitch(viz) {
       return this.props.getSheetUrl(viz.getWorkbook().getActiveSheet().getUrl());
     }
+  }, {
+    key: 'resizeViz',
+    value: function resizeViz(width, height) {
+      var sheet = this.state.viz.getWorkbook().getActiveSheet();
+      if (sheet) {
+        if (sheet.getSheetType() === 'dashboard' || sheet.getSheetType() === 'story') {
+          sheet.changeSizeAsync({
+            behavior: 'EXACTLY',
+            maxSize: {
+              height: height,
+              width: width
+            }
+          }).then(this.state.viz.setFrameSize(parseInt(width, 10), parseInt(height, 10)));
+        }
+        if (sheet.getSheetType() === 'worksheet') {
+          sheet.changeSizeAsync({
+            behavior: 'AUTOMATIC',
+            maxSize: {
+              height: height,
+              width: width
+            }
+          }).then(this.state.viz.setFrameSize(parseInt(width, 10), parseInt(height, 10)));
+        }
+      } else {
+        this.state.viz.setFrameSize(parseInt(width, 10), parseInt(height, 10));
+      }
+    }
 
     /**
      * Initialize the viz via the Tableau JS API.
@@ -233,20 +266,20 @@ var TableauReport = function (_React$Component) {
 
       var options = _extends({}, filters, parameters, this.props.options, {
         onFirstInteractive: function onFirstInteractive() {
-          _this4.workbook = _this4.viz.getWorkbook();
-          _this4.sheets = _this4.workbook.getActiveSheet().getWorksheets();
-          _this4.sheet = _this4.sheets[0];
+          // this.workbook = this.viz.getWorkbook();
+          // this.sheets = this.workbook.getActiveSheet().getWorksheets();
+          // this.sheet = this.sheets[0];
           _this4.viz.addEventListener(_tableauApi2.default.TableauEventName.TAB_SWITCH, function () {
             return _this4.onTabSwitch(_this4.viz);
           });
-          _this4.props.onLoad(new Date());
+          _this4.setState({ viz: _this4.viz });
         }
       });
 
       // cleanup
       if (this.viz) {
         this.viz.dispose();
-        this.viz = null;
+        this.setState({ viz: null });
       }
 
       this.viz = new _tableauApi2.default.Viz(this.container, vizUrl, options);

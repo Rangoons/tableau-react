@@ -168,7 +168,7 @@ class TableauReport extends React.Component {
         .getUrl()
     );
   }
-  resizeViz = (width, height) => {
+  resizeViz(width, height) {
     var sheet = this.state.viz.getWorkbook().getActiveSheet();
     if (sheet) {
       if (
@@ -209,7 +209,7 @@ class TableauReport extends React.Component {
     } else {
       this.state.viz.setFrameSize(parseInt(width, 10), parseInt(height, 10));
     }
-  };
+  }
 
   /**
    * Initialize the viz via the Tableau JS API.
