@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import url from 'url';
 import { Promise } from 'es6-promise';
 import shallowequal from 'shallowequal';
-import tokenizeUrl from './tokenizeUrl';
+import tokenizeUrl from 'components/tableau/tokenizeUrl';
 import Tableau from 'tableau-api';
 
 const propTypes = {
@@ -28,7 +28,7 @@ class TableauReport extends React.Component {
     this.state = {
       filters: props.filters,
       parameters: props.parameters,
-      viz: {},
+      viz: false,
     };
   }
 
@@ -39,7 +39,7 @@ class TableauReport extends React.Component {
   componentWillReceiveProps(nextProps) {
     const isReportChanged = nextProps.url !== this.props.url;
     const isResized = nextProps.options.width !== this.props.options.width;
-    if (isResized) {
+    if (isResized && this.state.viz) {
       this.resizeViz(nextProps.options.width, nextProps.options.height);
     }
     const isFiltersChanged = !shallowequal(
@@ -169,7 +169,6 @@ class TableauReport extends React.Component {
     );
   }
   resizeViz(width, height) {
-    console.log('resizing from package: ', width);
     var sheet = this.state.viz.getWorkbook().getActiveSheet();
     if (sheet) {
       if (

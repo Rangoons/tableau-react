@@ -26,7 +26,7 @@ var _shallowequal = require('shallowequal');
 
 var _shallowequal2 = _interopRequireDefault(_shallowequal);
 
-var _tokenizeUrl = require('./tokenizeUrl');
+var _tokenizeUrl = require('components/tableau/tokenizeUrl');
 
 var _tokenizeUrl2 = _interopRequireDefault(_tokenizeUrl);
 
@@ -68,7 +68,7 @@ var TableauReport = function (_React$Component) {
     _this.state = {
       filters: props.filters,
       parameters: props.parameters,
-      viz: {}
+      viz: false
     };
     return _this;
   }
@@ -83,7 +83,7 @@ var TableauReport = function (_React$Component) {
     value: function componentWillReceiveProps(nextProps) {
       var isReportChanged = nextProps.url !== this.props.url;
       var isResized = nextProps.options.width !== this.props.options.width;
-      if (isResized) {
+      if (isResized && this.state.viz) {
         this.resizeViz(nextProps.options.width, nextProps.options.height);
       }
       var isFiltersChanged = !(0, _shallowequal2.default)(this.props.filters, nextProps.filters, this.compareArrays);
@@ -223,7 +223,6 @@ var TableauReport = function (_React$Component) {
   }, {
     key: 'resizeViz',
     value: function resizeViz(width, height) {
-      console.log('resizing from package: ', width);
       var sheet = this.state.viz.getWorkbook().getActiveSheet();
       if (sheet) {
         if (sheet.getSheetType() === 'dashboard' || sheet.getSheetType() === 'story') {
