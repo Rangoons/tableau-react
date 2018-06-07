@@ -223,6 +223,7 @@ var TableauReport = function (_React$Component) {
   }, {
     key: 'resizeViz',
     value: function resizeViz(width, height) {
+      console.log('resizing from package: ', width);
       var sheet = this.state.viz.getWorkbook().getActiveSheet();
       if (sheet) {
         if (sheet.getSheetType() === 'dashboard' || sheet.getSheetType() === 'story') {

@@ -169,6 +169,7 @@ class TableauReport extends React.Component {
     );
   }
   resizeViz(width, height) {
+    console.log('resizing from package: ', width);
     var sheet = this.state.viz.getWorkbook().getActiveSheet();
     if (sheet) {
       if (
