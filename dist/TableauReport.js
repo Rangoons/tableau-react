@@ -291,7 +291,7 @@ var TableauReport = function (_React$Component) {
 
       return _react2.default.createElement('div', { ref: function ref(c) {
           return _this5.container = c;
-        } });
+        }, style: { overflow: 'auto' } });
     }
   }]);
 

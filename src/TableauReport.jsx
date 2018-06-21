@@ -244,7 +244,7 @@ class TableauReport extends React.Component {
   }
 
   render() {
-    return <div ref={c => (this.container = c)} style={{overflowX: "auto", overflowY: "auto"}}/>;
+    return <div ref={c => (this.container = c)} style={{ overflow: 'auto' }} />;
   }
 }
 
